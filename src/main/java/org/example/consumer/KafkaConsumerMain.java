@@ -12,7 +12,7 @@ public class KafkaConsumerMain {
     public static void main(String[] args) {
         String bootstrapServers = "localhost:9092";
         String topicName = "TP-PAGOS-CAJA-CATALOGOS-SUCURSALES-V1-AUTOSERVICIOS-ADD";
-        String groupId = "mi-grupo";
+        String groupId = "GR-1082318";
 
         // Configuración del consumidor
         Properties props = new Properties();
@@ -44,7 +44,7 @@ public class KafkaConsumerMain {
                     System.out.println("Transacción ID: " + transaccionId);
                     System.out.println("Fecha y Hora: " + fechaHora);
                     System.out.println("Acción: " + accion);
-                    System.out.println("-----------------------------------");
+                    System.out.println("---------------- [ No. Empleado: 1082318 ] -------------------");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
