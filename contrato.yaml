@@ -1,0 +1,171 @@
+asyncapi: 2.6.0
+info:
+  title: PAGOS-CAJA-CATALOGOS-SUCURSALES
+  version: V1
+  description: |
+    API específicamente diseñada para la gestión de metas establecidas por cajeros, la cual proporciona información detallada a nivel semanal, diario y horario.
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+
+servers:
+  localhost:
+    url: 'localhost:9092'
+    protocol: Kafka
+    protocolVersion: 3.0.0
+    description: Servidor local
+    security:
+      - Certificate: []
+
+
+defaultContentType: application/json
+
+channels:
+
+  TP-PAGOS-CAJA-CATALOGOS-SUCURSALES-V1-AUTOSERVICIOS-ADD:
+    servers:
+      - localhost
+
+    publish:
+      message:
+        $ref: '#/components/messages/autoservicios-add'
+
+
+components:
+  messages:
+
+    autoservicios-add:
+      name: ADD
+      title: AUTOSERVICIOS
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/autoservicios-schema'
+
+  schemas:
+
+    transaccionautoservicios:
+      type: object
+      description: Datos base de la transaccion
+      required:
+        - id
+        - fechaHora
+        - nombre
+        - accion
+        - fechaInicioProceso
+        - fechaFinProceso
+      properties:
+        id:
+          type: string
+          example: 4924f0a2-6b22-4690-b01a-0ff215b7ac10
+          description: "Id único por transacción en el estándar UUID"
+        fechaHora:
+          type: string
+          example: '2023-01-02T15:18:26.400-06:00'
+          description: "Fecha y hora cuando se envía el evento de la transacción"
+        nombre:
+          type: string
+          example: "PAGOS-CAJA-CATALOGOS-SUCURSALES-V1-AUTOSERVICIOS"
+          description: "Considerar el nombrado del tópico sin el prefijo 'TP-' y sin la 'ACCION'"
+        accion:
+          type: string
+          example: ADD
+          description: "Tipo de operación (ADD, UPDATE, REMOVE y READ)"
+        fechaInicioProceso:
+          type: string
+          example: '2023-01-02T15:18:26.400-06:00'
+          description: "Fecha y hora de inicio del proceso de la transacción del Backend"
+        fechaFinProceso:
+          type: string
+          example: '2023-01-02T15:18:26.400-06:00'
+          description: "Fecha y hora de término del proceso de la transacción del BackEnd"
+
+    autoservicios-schema:
+      type: object
+      required:
+        - transaccion
+        - operacion
+      properties:
+        transaccion:
+          type: object
+          description: "Describe una transacción que se realizó en relación con un tópico."
+          allOf:
+            - type: object
+              $ref: '#/components/schemas/transaccionautoservicios'
+        operacion:
+          type: object
+          description: "Objeto que contiene la operación de negocio."
+          required:
+            - sucursalAutoservicio
+
+          properties:
+            sucursalAutoservicio:
+              type: object
+              required:
+                - idPais
+                - idCanal
+                - numero
+                - numeroCajero
+                - numeroMultifuncional
+                - numeroCajeroAutoservicio
+                - anioSemanaPago
+                - multifuncional
+                - metaAutoservicio
+                - fechaHoraRegistroCentral
+              properties:
+                idPais:
+                  type: number
+                  example: 1
+                  description: "Clave unica para identificar un pais."
+                idCanal:
+                  type: number
+                  example: 1
+                  description: "Descripcion de idCanal"
+                numero:
+                  type: number
+                  example: 4624
+                  description: "Descripcion de numero"
+                numeroCajero:
+                  type: number
+                  example: 2
+                  description: "Descripcion de numeroCajero"
+                numeroMultifuncional:
+                  type: number
+                  example: 3
+                  description: "Descripcion de numeroMultifuncional"
+                numeroCajeroAutoservicio:
+                  type: number
+                  example: 3
+                  description: "Descripcion de numeroCajeroAutoservicio"
+                anioSemanaPago:
+                  type: number
+                  example: 202318
+                  description: "Descripcion de anioSemanaPago"
+                multifuncional:
+                  type: boolean
+                  example: true
+                  description: "Descripcion de multifuncional"
+                metaAutoservicio:
+                  type: number
+                  example: 500
+                  description: "Descripcion de metaAutoservicio"
+                fechaHoraRegistroCentral:
+                  type: string
+                  example: "2023-05-08T15:18:26.400-06:00"
+                  description: "Descripcion de fechaHoraRegistroCentral"
+
+  securitySchemes:
+    Certificate:
+      type: http
+      description: 'Autenticación con texto plano.'
+      scheme: plain
+
+  operationTraits:
+
+    autoserviciosTraits:
+      bindings:
+        desarrollo:
+          groupId: "Pendiente -> GR-ejemplo"
+          particiones: 4
+        produccion:
+          groupId: "Pendiente -> GR-ejemplo"
+          particiones: 30
