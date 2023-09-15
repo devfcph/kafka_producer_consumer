@@ -8,9 +8,9 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
-public class KafkaConsumerExample {
+public class KafkaConsumerMain {
     public static void main(String[] args) {
-        String bootstrapServers = "localhost:9092"; // Cambia esto por la dirección de tu servidor Kafka
+        String bootstrapServers = "localhost:9092";
         String topicName = "TP-PAGOS-CAJA-CATALOGOS-SUCURSALES-V1-AUTOSERVICIOS-ADD";
         String groupId = "mi-grupo";
 
